@@ -1,0 +1,54 @@
+.w3-tangerine {
+	font-family: 'Oswald', sans-serif;
+	color: red;
+}
+.w3-pacifico
+{
+	font-family: 'Pacifico', cursive;
+}
+input:focus {
+    outline: none 
+}
+*, *:before, *:after {
+    box-sizing: border-box;
+}
+//  End:normalize
+
+.input-underline-wrapper {
+    display: inline-block;
+    width: 100%;
+}
+
+input {
+    width: calc(100% - 2px);
+    margin-left: 1px;
+    padding-bottom: 2px;
+}
+
+input[type=text] {
+    border: 0;
+    cursor: text;
+}
+
+.underline {
+    background-color: #ebebeb;
+    transition: color 0.3s, background 0.3s, border 0.3s, text-shadow 0.3s;
+    z-index: 0;
+    height: 5px;
+    margin-top: -4px;
+    width: 100%;
+}
+
+input:focus ~ .underline {
+    background-color: #4EA6EA;
+}
+.city {display:none;
+
+}
+.bar{
+    height: 30px;
+    background:white; 
+}
+#btn5{
+    display: none;
+}
