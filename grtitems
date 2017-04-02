@@ -1,0 +1,319 @@
+<?php
+session_start();
+require_once("./include/membersite_configone.php");
+$hotel=$_SESSION['name_user'];
+$date= date('Y-m-d');
+
+if(!$fgmembersite->CheckLogin())
+{
+ $fgmembersite->RedirectToURL("hotellogin.php");
+    exit;
+} 
+if(isset($_POST['add_item']))
+{
+$img="";
+$target = "images/".basename($_FILES['image']['name']);
+$image= $_FILES['image']['name'];
+    $i_name = $_POST['i_name'];
+   $i_cat = $_POST['i_cat'];
+$i_cost = $_POST['i_cost'];
+
+$i_hotel =$hotel ;
+    $qune = "INSERT INTO `grtitems`(`i_name`,`image`, `i_cat`, `i_cost`, `hotel`) VALUES ('$i_name','$image','$i_cat','$i_cost','$i_hotel')";
+     filterTable($qune); 
+
+if(move_uploaded_file($_FILES['image']['tmp_name'],$target))
+{
+$msg="IMAGE UPLOADED SUCESSFULLY";
+}
+else
+{
+$msg="NOT UPLOADED";
+}
+}
+
+$hotel_ite = "SELECT * from grtitems";
+    $hotel_items = filterTable($hotel_ite);
+
+if(isset($_POST['i_del']))
+{
+    $res_id = $_POST['i_idone'];
+    $qu = "DELETE FROM `grtitems` WHERE i_id = '$res_id'";
+     $z= filterTable($qu); 
+header("Refresh:0");
+}
+
+if(isset($_POST['i_ed']))
+{
+ $i_idone = $_POST['i_idone'];
+ $i_catone = $_POST['i_catone'];
+ $i_costone = $_POST['i_costone'];
+$a = "UPDATE `grtitems` SET `i_cat`='$i_catone',`i_cost`='$i_costone' WHERE `i_id`=' $i_idone'";
+     $y= filterTable($a); 
+header("Refresh:0");
+}
+
+function filterTable($query)
+{
+    $connect = mysqli_connect("localhost", "id682590_foodlovertk", "seshu", "id682590_foodlover");
+    $filter_Result = mysqli_query($connect, $query);
+    return $filter_Result;
+}
+?>
+<!DOCTYPE html>
+<html>
+<title>Food Cent</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/3/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+select
+{
+border:none;
+border-bottom:2px solid #f33446;
+background:transparent;
+width:100px;
+}
+select:focus
+{
+outline:none;
+}
+a
+{
+text-decoration:none;
+}
+#search,#searchone,#searchtwo:focus
+{
+outline:0;
+}
+
+  table,tr,th,td
+            {
+                border: 1px solid white;
+padding:10px;
+               
+            }
+html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+
+.container {
+  border: 2px solid #ccc;
+  background-color: white;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px 0
+}
+
+.container::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.container img {
+  float: left;
+  margin-right: 20px;
+}
+
+.container span {
+  font-size: 12pt;
+  margin-right: 15px;
+}
+
+@media (max-width: 500px) {
+  .container {
+      text-align: center;
+  }
+  .container img {
+      margin: auto;
+      float: none;
+      display: block;
+  }
+}
+input
+{
+border:none;
+background:transparent;
+}
+#input
+{
+border:none;
+background:transparent;
+border-bottom:2px solid #f33446;
+margin-bottom:20px;
+margin-left:20px;
+}
+#input:focus
+{
+outline:0;
+}
+button
+{
+border:none;
+cursor:pointer;
+}
+select
+{
+border:none;
+cursor:pointer;
+border-bottom:2px solid #f33446;
+margin-left:20px;
+}
+</style>
+<body class="w3-light-grey">
+
+<!-- Top container -->
+<div class="w3-container w3-top w3-red w3-large w3-padding" style="z-index:4">
+  <button class="w3-button w3-hide-large w3-padding-0 w3-red w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
+  <span class="w3-right">FOOD CENT</span>
+</div>
+
+<!-- Sidebar/menu -->
+<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
+  <div class="w3-container w3-row">
+    <div class="w3-col s4">
+      <img src="img/seshu.jpg" class="w3-circle w3-margin-right" style="width:46px">
+    </div>
+    <div class="w3-col s8 w3-bar">
+      <span>Welcome, <strong><?php echo $hotel ?></strong></span><br>
+<a href="change-pwdone.php" class="w3-bar-item w3-button"><i class="fa fa-key"></i></a>
+      <a href="hotellogout.php" class="w3-bar-item w3-button"><i class="fa fa-sign-out "></i></a>
+    </div>
+  </div>
+  <hr>
+  <div class="w3-container w3-blue">
+    <h5 class="">Dashboard</h5>
+  </div>
+  <div class="w3-bar-block">
+    <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
+    <a href="q.php" class="w3-bar-item w3-button w3-padding "><i class="fa fa-dashboard fa-fw"></i>  Hotel Dashboard</a>
+<a href="grtitems.php" class="w3-bar-item w3-button w3-padding "><i class="fa fa-cutlery  fa-fw"></i>  Hotel Items</a>
+  </div>
+</nav>
+
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" style="margin-left:300px;margin-top:43px;">
+<br>
+
+  <!-- Header -->
+  <header class="w3-container" style="padding-top:22px">
+    <h5><b><i class="fa fa-dashboard"></i> Add an Item </b></h5>
+  </header>
+<hr>
+<div class="w3-pannel">
+<form method="post" action="" enctype="multipart/form-data">
+<input type="hidden" name="size" value="1000000">
+<input id="input" type="text" name="i_name" placeholder="Itemname" >
+<input id="input" type="text" name="i_cost" placeholder="Itemcost">
+<select id="input" name="i_cat">
+ <option value="Starters">Starters</option>
+  <option value="Specials">Specials</option>
+  <option value="Biriyani">Biriyani</option>
+  <option value="Fried Rice">Fried Rice</option>
+</select>
+<input id="input" type="file" name="image" placeholder="Insert the Image">
+<input class="w3-btn w3-red w3-margin-left" type="submit" name="add_item" value="Add the Item">
+</form>
+</div>
+<hr>
+<div class="w3-margin">
+<span>Search the Item Name:</span>
+<input type="text" id="search" placeholder=" search" style="width:200px;border-bottom:2px solid #f33446;"></input>
+</div>
+
+<div class="w3-panel" id="Users">
+<h5>item Details</h5>
+ <table class="w3-table w3-striped w3-white" id="tableone">
+                <tr>
+                <th>Item Name</th>
+                
+                <th>Item Category</th>
+                <th>Item Cost</th>
+                <th></th>
+               </tr>
+             <tbody>
+      <!-- populate table from mysql database -->
+                <?php while($row = mysqli_fetch_array($hotel_items)):?>
+                <tr id="mytableone">
+<form action='' method='post'>
+                    
+                    <td><?php echo $row['i_name'];?></td>
+                    <td><input type="text" name="i_catone" value="<?php echo $row['i_cat'];?>"></td>
+                    <td><input type="text" name="i_costone" value="<?php echo $row['i_cost'];?>"></td>
+                    <td>
+
+<input type="hidden" name="i_idone" value="<?php echo $row['i_id'] ?>">
+<button class="w3-transparent" type="submit" name="i_del" style="cursor:pointer;border:none;"><img src="img/trash-can.svg" style="width:20px;height:20px;"></button>
+<button class="w3-transparent"  type="submit" id="2" name="i_ed" style="cursor:pointer;border:none;"><img src="img/pencil-edit-button.svg" style="width:20px;height:20px;"></button>
+                             </td>
+                             </form>    
+                             </tr>
+                                 <?php endwhile;?>
+                             </tbody>
+                             </table><br>
+</div>
+
+  <!-- Footer -->
+  <footer class="w3-container w3-padding-16 w3-dark-grey">
+    <h4>FOOTER</h4>
+    <p>Powered by <a href="https://www.foodcent.com" target="_blank">foodcent</a></p>
+  </footer>
+
+  <!-- End page content -->
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+    if (mySidebar.style.display === 'block') {
+        mySidebar.style.display = 'none';
+        overlayBg.style.display = "none";
+    } else {
+        mySidebar.style.display = 'block';
+        overlayBg.style.display = "block";
+    }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+    mySidebar.style.display = "none";
+    overlayBg.style.display = "none";
+}
+</script>
+<script src="js/index.js"></script>
+<script src="js/main.js"></script>
+<script>
+$("#search").on("keyup", function() {
+    var value = $(this).val();
+
+    $("#tableone tr").each(function(index) {
+        if (index !== 0) {
+
+            $row = $(this);
+
+            var id = $row.find("td:first").text();
+
+            if (id.indexOf(value) !== 0) {
+                $row.hide();
+            }
+            else {
+                $row.show();
+            }
+        }
+    });
+});
+
+</script>
+</body>
+</html>
